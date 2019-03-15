@@ -11,9 +11,9 @@ namespace ApplicationCleaner
 			_service = service;
 		}
 
-		public async Task RunAsync()
+		public Task RunAsync()
 		{
-			await _service.ExecuteAsync();
+			return _service.ExecuteAsync();
 		}
 	}
 }

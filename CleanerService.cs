@@ -17,16 +17,19 @@ namespace ApplicationCleaner
 	public class CleanerService : ICleanerService
 	{
 		private readonly CleanerConfiguration _config;
+		private readonly IUserInput _userInput;
 
-		public CleanerService(IOptions<CleanerConfiguration> options)
+		public CleanerService(IOptions<CleanerConfiguration> options, IUserInput userInput)
 		{
 			_config = options.Value;
+			_userInput = userInput;
 		}
 
 		public Task ExecuteAsync(CancellationToken token = default)
 		{
 			Console.WriteLine("Welcome to the Application Cleaner!");
-			return Search(token);
+			var arguments = _userInput.Arguments;
+			return arguments.Any() ? Search(arguments.First(), token) : Search(token);
 		}
 
 		public Task StopAsync(CancellationToken token = default)

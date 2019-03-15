@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ namespace ApplicationCleaner
 	{
 		private static Task Main(string[] args)
 		{
-			var provider = ConfigureServices();
+			var provider = ConfigureServices(args);
 			if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 			{
 				var logger = provider.GetService<ILogger<Application>>();
@@ -23,7 +24,7 @@ namespace ApplicationCleaner
 			return provider.GetService<Application>().RunAsync();
 		}
 
-		private static IServiceProvider ConfigureServices()
+		private static IServiceProvider ConfigureServices(string[] args)
 		{
 			var configuration = BuildConfiguration();
 			var services = new ServiceCollection();
@@ -32,11 +33,16 @@ namespace ApplicationCleaner
 			services.AddLogging(opt => opt.AddConsole());
 			services.AddTransient<ICleanerService, CleanerService>();
 			services.AddTransient<Application>();
-			
+			services.AddTransient<IUserInput>(instance => new UserInput
+			{
+				Arguments = args.ToList()
+			});
+
 			return services.BuildServiceProvider();
 		}
 
-		private static IConfiguration BuildConfiguration() {
+		private static IConfiguration BuildConfiguration()
+		{
 			return new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("appsettings.json", false, true)
