@@ -27,24 +27,23 @@ namespace ApplicationCleaner
 		private static IServiceProvider ConfigureServices(string[] args)
 		{
 			var configuration = BuildConfiguration();
-			var services = new ServiceCollection();
-			services.AddOptions();
-			services.Configure<CleanerConfiguration>(configuration.GetSection("Configuration"));
-			services.AddLogging(opt => opt.AddConsole());
-			services.AddTransient<ICleanerService, CleanerService>();
-			services.AddTransient<Application>();
-			services.AddTransient<IUserInput>(instance => new UserInput
-			{
-				Arguments = args.ToList()
-			});
-
-			return services.BuildServiceProvider();
+			return new ServiceCollection()
+				.AddOptions()
+				.Configure<CleanerConfiguration>(configuration.GetSection("Configuration"))
+				.AddLogging(opt => opt.AddConsole())
+				.AddTransient<ICleanerService, CleanerService>()
+				.AddTransient<Application>()
+				.AddTransient<IUserInput>(instance => new UserInput
+				{
+					Arguments = args.ToList()
+				})
+				.BuildServiceProvider();
 		}
 
 		private static IConfiguration BuildConfiguration()
 		{
 			return new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
+				.SetBasePath(AppContext.BaseDirectory)
 				.AddJsonFile("appsettings.json", false, true)
 				.AddEnvironmentVariables()
 				.Build();
