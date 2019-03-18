@@ -4,7 +4,7 @@ In case a file or folder is found, the application will provide the user with an
 
 ## System requirements
 - macOS 10.14 or higher
-- .NET Core SDK 2.2 or higher
+- [.NET Core SDK 2.2](https://dotnet.microsoft.com/download) or higher
 
 ## Configuration
 The folders in which the application will search for files and folders can be configured by adding or removing entries in the `appsettings.json` file.
@@ -16,8 +16,8 @@ In order to build and publish this application, run the following commands in th
 - `dotnet publish -r osx.10.14-x64 -c Release`
 
 ## Usage
-In order to run the application, just run `./ApplicationCleaner [keyword]` in the publish directory. The keyword is optional and can be specified as a second argument.
+In order to run the application, execute `./ApplicationCleaner [keyword]` in the publish directory (defaults to `bin/Release/netcoreapp2.2/osx.10.14-x64/publish/` from the project folder). The keyword is optional and if omitted, it will be asked for upon execution.
 
 ## License
-- MIT
+- [MIT](LICENSE)
 
