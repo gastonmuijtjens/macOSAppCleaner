@@ -1,5 +1,5 @@
 # macOSAppCleaner
-Small command line tool for cleaning up old application files after deletion of an application on macOS. Takes a keyword and searches for files or folders in the appropriate folders in the Library folder of the current user. 
+Small command line tool for cleaning up old application files after deletion of an application on macOS. Takes a keyword and searches for files or folders in the configured folders in the Library folder of the current user. 
 In case a file or folder is found, the application will provide the user with an option to delete it.
 
 ## System requirements
@@ -7,10 +7,10 @@ In case a file or folder is found, the application will provide the user with an
 - [.NET Core SDK 2.2](https://dotnet.microsoft.com/download) or higher
 
 ## Configuration
-The folders in which the application will search for files and folders can be configured by adding or removing entries in the `appsettings.json` file.
+The Library folders where the application will search for files and folders can be configured by adding or removing entries in the `appsettings.json` file.
 
 ## Installation
-In order to build and publish this application, run the following commands in the given order:
+In order to build and publish this application, run the following commands in the project folder in the given order:
 - `dotnet restore`
 - `dotnet build`
 - `dotnet publish -r osx.10.14-x64 -c Release`
