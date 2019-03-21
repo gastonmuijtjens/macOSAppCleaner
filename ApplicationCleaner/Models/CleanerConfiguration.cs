@@ -1,4 +1,4 @@
-namespace ApplicationCleaner
+namespace ApplicationCleaner.Models
 {
 	public class CleanerConfiguration
 	{

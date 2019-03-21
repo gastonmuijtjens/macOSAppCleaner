@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ApplicationCleaner
+namespace ApplicationCleaner.Models
 {
 	public interface IUserInput
 	{

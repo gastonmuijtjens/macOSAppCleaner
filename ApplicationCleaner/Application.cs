@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using ApplicationCleaner.Services;
 
 namespace ApplicationCleaner
 {
@@ -14,6 +15,11 @@ namespace ApplicationCleaner
 		public Task RunAsync()
 		{
 			return _service.ExecuteAsync();
+		}
+
+		public Task StopAsync()
+		{
+			return _service.StopAsync();
 		}
 	}
 }

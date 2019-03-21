@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ApplicationCleaner.Models;
 using Microsoft.Extensions.Options;
 
-namespace ApplicationCleaner
+namespace ApplicationCleaner.Services
 {
 	public interface ICleanerService
 	{
@@ -28,7 +29,7 @@ namespace ApplicationCleaner
 		public Task ExecuteAsync(CancellationToken token = default)
 		{
 			Console.WriteLine("Welcome to the Application Cleaner!");
-			var arguments = _userInput.Arguments;
+			var arguments = _userInput.Arguments.ToList();
 			return arguments.Any() ? Search(arguments.First(), token) : Search(token);
 		}
 
@@ -61,7 +62,7 @@ namespace ApplicationCleaner
 
 			WriteSeparator();
 
-			var answer = GetUserInput("Do you want to perform another search? y/n");
+			var answer = GetUserInput("Do you want to perform another search? (Y/n)");
 			if (answer == "y")
 			{
 				WriteSeparator();
@@ -85,7 +86,7 @@ namespace ApplicationCleaner
 			foreach (var file in files)
 			{
 				Console.WriteLine(file);
-				var choice = GetUserInput("Delete? y/n");
+				var choice = GetUserInput("Delete? (Y/n)");
 				if (choice == "y")
 				{
 					var fileAttributes = File.GetAttributes(file);
@@ -127,7 +128,7 @@ namespace ApplicationCleaner
 		private static string GetUserInput(string text)
 		{
 			Console.WriteLine(text);
-			return Console.ReadLine().ToLower();
+			return Console.ReadLine()?.ToLower();
 		}
 
 		private static void WriteSeparator()

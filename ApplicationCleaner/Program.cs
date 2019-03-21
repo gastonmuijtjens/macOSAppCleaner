@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using ApplicationCleaner.Models;
+using ApplicationCleaner.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,6 +13,8 @@ namespace ApplicationCleaner
 {
 	internal class Program
 	{
+		private const string AppSettingsName = "appsettings.json";
+
 		private static Task Main(string[] args)
 		{
 			var provider = ConfigureServices(args);
@@ -43,10 +47,23 @@ namespace ApplicationCleaner
 		private static IConfiguration BuildConfiguration()
 		{
 			return new ConfigurationBuilder()
-				.SetBasePath(AppContext.BaseDirectory)
-				.AddJsonFile("appsettings.json", false, true)
+				.SetBasePath(AppSettingsPath)
+				.AddJsonFile(AppSettingsName, false, true)
 				.AddEnvironmentVariables()
 				.Build();
+		}
+
+		private static string AppSettingsPath
+		{
+			get
+			{
+				var currentDirectory = Directory.GetCurrentDirectory();
+				return Directory
+					.GetFiles(currentDirectory)
+					.Any(m => m.Contains(AppSettingsName))
+					? currentDirectory
+					: AppContext.BaseDirectory;
+			}
 		}
 	}
 }
