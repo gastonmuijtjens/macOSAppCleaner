@@ -28,7 +28,6 @@ namespace ApplicationCleaner.Services
 
 		public Task ExecuteAsync(CancellationToken token = default)
 		{
-			Console.WriteLine("Welcome to the Application Cleaner!");
 			var arguments = _userInput.Arguments.ToList();
 			return arguments.Any() ? Search(arguments.First(), token) : Search(token);
 		}
@@ -50,7 +49,7 @@ namespace ApplicationCleaner.Services
 			var keywordLength = _config.KeywordLength;
 			if (string.IsNullOrWhiteSpace(keyword) || keyword.Length < keywordLength)
 			{
-				Console.WriteLine($"Keyword must at least have a length of {keywordLength}");
+				Console.WriteLine($"Keyword must have a length of at least {keywordLength}");
 				await Search(token);
 				return;
 			}
