@@ -41,7 +41,7 @@ namespace ApplicationCleaner.Services
 
 		private Task Search(CancellationToken token)
 		{
-			var keyword = GetUserInput("Type in a keyword to search for...");
+			var keyword = GetUserInput("Type in a keyword to search for: ");
 			return Search(keyword, token);
 		}
 
@@ -59,14 +59,14 @@ namespace ApplicationCleaner.Services
 			await SearchLibraryFolders(keyword, token);
 			WriteConsoleSeparator();
 
-			var doSearchSystemFolders = PromptUser("Do you want to search in the root Library folder as well? (Y/n)");
+			var doSearchSystemFolders = PromptUser("Do you want to search in the root Library folder as well? [Y/n] ");
 			if (doSearchSystemFolders)
 			{
 				WriteConsoleSeparator();
 				await SearchRootLibraryFolders(keyword, token);
 			}
 
-			var doPerformAnotherSearch = PromptUser("Do you want to perform another search? (Y/n)");
+			var doPerformAnotherSearch = PromptUser("Do you want to perform another search? [Y/n] ");
 			if (doPerformAnotherSearch)
 			{
 				WriteConsoleSeparator();
@@ -102,7 +102,7 @@ namespace ApplicationCleaner.Services
 		private async Task ListLibraryFiles(string folder, string keyword, CancellationToken token)
 		{
 			WriteConsoleSeparator();
-			Console.WriteLine($"Matched files in {folder} folder:");
+			Console.WriteLine($"Matched files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
 			var files = await SearchLibraryFiles(folder, keyword, token);
 			ListFiles(files);
 		}
@@ -110,7 +110,7 @@ namespace ApplicationCleaner.Services
 		private async Task ListRootLibraryFiles(string folder, string keyword, CancellationToken token)
 		{
 			WriteConsoleSeparator();
-			Console.WriteLine($"Matches files in {folder} folder:");
+			Console.WriteLine($"Matched files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
 			var files = await SearchRootLibraryFiles(folder, keyword, token);
 			ListFiles(files);
 		}
@@ -120,7 +120,7 @@ namespace ApplicationCleaner.Services
 			foreach (var file in files)
 			{
 				Console.WriteLine(file);
-				var shouldDelete = PromptUser("Delete? (Y/n)");
+				var shouldDelete = PromptUser("Delete? [Y/n] ");
 				if (shouldDelete)
 				{
 					var fileAttributes = File.GetAttributes(file);
@@ -179,19 +179,32 @@ namespace ApplicationCleaner.Services
 
 		private static string GetUserInput(string text)
 		{
-			Console.WriteLine(text);
+			WriteConsoleQuestion(text);
 			return Console.ReadLine()?.ToLower();
 		}
 
 		private static bool PromptUser(string text)
 		{
-			var userInput = GetUserInput(text);
-			return userInput == "y";
+			WriteConsoleQuestion(text);
+			var answer = Console.ReadKey();
+			ConsoleKey key = ConsoleKey.A;
+			while (key != ConsoleKey.Enter)
+			{
+				key = Console.ReadKey(true).Key;
+			}
+			
+			Console.WriteLine();
+			return answer.Key == ConsoleKey.Y;
 		}
 
 		private static void WriteConsoleSeparator()
 		{
 			Console.WriteLine("------");
+		}
+
+		private static void WriteConsoleQuestion(string text)
+		{
+			Console.Write($"\u001b[1m{text}\u001b[0m");
 		}
 
 		private static void WriteConsoleError(string message)
