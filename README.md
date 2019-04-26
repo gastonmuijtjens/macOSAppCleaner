@@ -18,10 +18,10 @@ To the application after installation, execute `./ApplicationCleaner [keyword]` 
 An example concerning deleting the `GitHub Desktop` application would be:
 - `sudo ./ApplicationCleaner github`
 
-Note that if `sudo` is ommitted, only the user `Library` folder will be searched.
+Note that if `sudo` is omitted, only the user `Library` folder will be searched.
 
 ## Configuration
-The locations within the `Library` folders where the application will search for files and folders can be configured by adding or removing entries in the [a relative link](ApplicationCleaner/appsettings.json) file. It is possible to configure the required minimum length of the keyword as well.
+The locations within the `Library` folders where the application will search for files and folders can be configured by adding or removing entries in the [appsettings.json](ApplicationCleaner/appsettings.json) file. It is possible to configure the required minimum length of the keyword as well.
 
 ## License
 - [MIT](LICENSE)

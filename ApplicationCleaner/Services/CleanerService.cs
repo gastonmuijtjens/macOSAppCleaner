@@ -56,7 +56,7 @@ namespace ApplicationCleaner.Services
 				return;
 			}
 
-			await SearchLibraryFolders(keyword, token);
+			await SearchUserLibraryFolders(keyword, token);
 			WriteConsoleSeparator();
 
 			var doSearchSystemFolders = PromptUser("Do you want to search in the root Library folder as well? [Y/n] ");
@@ -77,11 +77,11 @@ namespace ApplicationCleaner.Services
 			await StopAsync(token);
 		}
 
-		private async Task SearchLibraryFolders(string keyword, CancellationToken token)
+		private async Task SearchUserLibraryFolders(string keyword, CancellationToken token)
 		{
 			foreach (var folder in _config.UserLibraryFolders)
 			{
-				await ListLibraryFiles(folder, keyword, token);
+				await ListUserLibraryFiles(folder, keyword, token);
 			}
 		}
 
@@ -99,19 +99,22 @@ namespace ApplicationCleaner.Services
 			}
 		}
 
-		private async Task ListLibraryFiles(string folder, string keyword, CancellationToken token)
+		private async Task ListUserLibraryFiles(string folder, string keyword, CancellationToken token)
 		{
-			WriteConsoleSeparator();
-			Console.WriteLine($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
-			var files = await SearchLibraryFiles(folder, keyword, token);
-			ListFiles(files);
+			var files = await SearchUserLibraryFiles(folder, keyword, token);
+			ListLibraryFiles(files, folder);
 		}
 
 		private async Task ListRootLibraryFiles(string folder, string keyword, CancellationToken token)
 		{
+			var files = await SearchRootLibraryFiles(folder, keyword, token);
+			ListLibraryFiles(files, folder);
+		}
+
+		private static void ListLibraryFiles(IEnumerable<string> files, string folder)
+		{
 			WriteConsoleSeparator();
 			Console.WriteLine($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
-			var files = await SearchRootLibraryFiles(folder, keyword, token);
 			ListFiles(files);
 		}
 
@@ -150,7 +153,7 @@ namespace ApplicationCleaner.Services
 			return SearchFiles(keyword, searchFolder);
 		}
 
-		private async Task<IEnumerable<string>> SearchLibraryFiles(string subFolder, string keyword, CancellationToken token)
+		private async Task<IEnumerable<string>> SearchUserLibraryFiles(string subFolder, string keyword, CancellationToken token)
 		{
 			var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 			var libraryFolder = Path.Combine(homeFolder, _config.UserLibraryFolder);
@@ -159,9 +162,7 @@ namespace ApplicationCleaner.Services
 				return SearchFiles(keyword, libraryFolder, subFolder);
 			}
 
-			WriteConsoleError("The library folder does not exist. There is something wrong with the configuration on your Mac");
-			await StopAsync(token);
-			return new List<string>();
+			return await ShowLibraryConfigurationError($"The Library folder of the current user does not exist at {libraryFolder}. Please change the configuration and try again.", token);
 		}
 
 		private async Task<IEnumerable<string>> SearchRootLibraryFiles(string subFolder, string keyword, CancellationToken token)
@@ -172,7 +173,12 @@ namespace ApplicationCleaner.Services
 				return SearchFiles(keyword, rootLibraryFolder, subFolder);
 			}
 
-			WriteConsoleError("The root library folder does not exist. There is something wrong with the configuration on your Mac.");
+			return await ShowLibraryConfigurationError($"The root Library folder does not exist at {rootLibraryFolder}. Please change the configuration and try again.", token);
+		}
+
+		private async Task<IEnumerable<string>> ShowLibraryConfigurationError(string message, CancellationToken token)
+		{
+			WriteConsoleError(message);
 			await StopAsync(token);
 			return new List<string>();
 		}
@@ -192,7 +198,7 @@ namespace ApplicationCleaner.Services
 			{
 				key = Console.ReadKey(true).Key;
 			}
-			
+
 			Console.WriteLine();
 			return answer.Key == ConsoleKey.Y;
 		}
