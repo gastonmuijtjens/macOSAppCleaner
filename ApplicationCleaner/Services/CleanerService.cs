@@ -79,7 +79,7 @@ namespace ApplicationCleaner.Services
 
 		private async Task SearchLibraryFolders(string keyword, CancellationToken token)
 		{
-			foreach (var folder in _config.LibraryFolders)
+			foreach (var folder in _config.UserLibraryFolders)
 			{
 				await ListLibraryFiles(folder, keyword, token);
 			}
@@ -102,7 +102,7 @@ namespace ApplicationCleaner.Services
 		private async Task ListLibraryFiles(string folder, string keyword, CancellationToken token)
 		{
 			WriteConsoleSeparator();
-			Console.WriteLine($"Matched files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
+			Console.WriteLine($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
 			var files = await SearchLibraryFiles(folder, keyword, token);
 			ListFiles(files);
 		}
@@ -110,7 +110,7 @@ namespace ApplicationCleaner.Services
 		private async Task ListRootLibraryFiles(string folder, string keyword, CancellationToken token)
 		{
 			WriteConsoleSeparator();
-			Console.WriteLine($"Matched files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
+			Console.WriteLine($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
 			var files = await SearchRootLibraryFiles(folder, keyword, token);
 			ListFiles(files);
 		}
@@ -153,7 +153,7 @@ namespace ApplicationCleaner.Services
 		private async Task<IEnumerable<string>> SearchLibraryFiles(string subFolder, string keyword, CancellationToken token)
 		{
 			var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			var libraryFolder = Path.Combine(homeFolder, _config.LibraryFolder);
+			var libraryFolder = Path.Combine(homeFolder, _config.UserLibraryFolder);
 			if (Directory.Exists(libraryFolder))
 			{
 				return SearchFiles(keyword, libraryFolder, subFolder);
