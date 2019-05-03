@@ -189,18 +189,28 @@ namespace ApplicationCleaner.Services
 			return Console.ReadLine()?.ToLower();
 		}
 
-		private static bool PromptUser(string text)
+		private static bool PromptUser()
 		{
-			WriteConsoleQuestion(text);
-			var answer = Console.ReadKey();
+			var answer = Console.ReadKey().Key;
 			ConsoleKey key = ConsoleKey.A;
 			while (key != ConsoleKey.Enter)
 			{
 				key = Console.ReadKey(true).Key;
+				if (key == ConsoleKey.Backspace)
+				{
+					Console.Write("\b \b");
+					return PromptUser();
+				}
 			}
 
 			Console.WriteLine();
-			return answer.Key == ConsoleKey.Y;
+			return answer == ConsoleKey.Y;
+		}
+		
+		private static bool PromptUser(string text)
+		{
+			WriteConsoleQuestion(text);
+			return PromptUser();
 		}
 
 		private static void WriteConsoleSeparator()
