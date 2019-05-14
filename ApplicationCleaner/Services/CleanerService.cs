@@ -35,7 +35,7 @@ namespace ApplicationCleaner.Services
 
 		public Task StopAsync(CancellationToken token = default)
 		{
-			Console.WriteLine("Stopping application...");
+			WriteConsole("Stopping application...");
 			return Task.CompletedTask;
 		}
 
@@ -114,7 +114,7 @@ namespace ApplicationCleaner.Services
 		private static void ListLibraryFiles(IEnumerable<string> files, string folder)
 		{
 			WriteConsoleSeparator();
-			Console.WriteLine($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
+			WriteConsole($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
 			ListFiles(files);
 		}
 
@@ -122,7 +122,7 @@ namespace ApplicationCleaner.Services
 		{
 			foreach (var file in files)
 			{
-				Console.WriteLine(file);
+				WriteConsole(file);
 				var shouldDelete = PromptUser("Delete? [Y/n] ");
 				if (shouldDelete)
 				{
@@ -136,7 +136,7 @@ namespace ApplicationCleaner.Services
 						File.Delete(file);
 					}
 
-					Console.WriteLine("File or folder was deleted");
+					WriteConsole("File or folder was deleted");
 				}
 			}
 		}
@@ -202,8 +202,8 @@ namespace ApplicationCleaner.Services
 					return PromptUser();
 				}
 			}
-
-			Console.WriteLine();
+			
+			WriteConsole(string.Empty);
 			return answer == ConsoleKey.Y;
 		}
 		
@@ -213,9 +213,14 @@ namespace ApplicationCleaner.Services
 			return PromptUser();
 		}
 
+		private static void WriteConsole(string text)
+		{
+			Console.WriteLine(text);
+		}
+
 		private static void WriteConsoleSeparator()
 		{
-			Console.WriteLine("------");
+			WriteConsole("------");
 		}
 
 		private static void WriteConsoleQuestion(string text)
@@ -226,7 +231,7 @@ namespace ApplicationCleaner.Services
 		private static void WriteConsoleError(string message)
 		{
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine(message);
+			WriteConsole(message);
 			Console.ResetColor();
 		}
 	}
