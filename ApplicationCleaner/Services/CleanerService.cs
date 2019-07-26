@@ -35,7 +35,7 @@ namespace ApplicationCleaner.Services
 
 		public Task StopAsync(CancellationToken token = default)
 		{
-			WriteConsole("Stopping application...");
+			WriteConsoleLine("Stopping application...");
 			return Task.CompletedTask;
 		}
 
@@ -50,7 +50,7 @@ namespace ApplicationCleaner.Services
 			var keywordLength = _config.KeywordLength;
 			if (string.IsNullOrWhiteSpace(keyword) || keyword.Length < keywordLength)
 			{
-				WriteConsoleError($"Keyword must have a length of at least {keywordLength}");
+				WriteConsoleError($"Keyword must have a length of at least {keywordLength} letters");
 				WriteConsoleSeparator();
 				await Search(token);
 				return;
@@ -89,7 +89,7 @@ namespace ApplicationCleaner.Services
 		{
 			if (!UnixUtils.IsRoot)
 			{
-				WriteConsoleError("In order to search into system folders, this command has to be run as root or with 'sudo'. Please rerun the application and try again.");
+				WriteConsoleError("Permission denied. In order to search into system folders, this command needs to be executed as root or with 'sudo'. Please rerun the application as root and try again.");
 				return;
 			}
 
@@ -114,7 +114,7 @@ namespace ApplicationCleaner.Services
 		private static void ListLibraryFiles(IEnumerable<string> files, string folder)
 		{
 			WriteConsoleSeparator();
-			WriteConsole($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
+			WriteConsoleLine($"Matching files in \u001b[35m\u001b[1m{folder}\u001b[0m\u001b[0m folder:");
 			ListFiles(files);
 		}
 
@@ -122,7 +122,7 @@ namespace ApplicationCleaner.Services
 		{
 			foreach (var file in files)
 			{
-				WriteConsole(file);
+				WriteConsoleLine(file);
 				var shouldDelete = PromptUser("Delete? [Y/n] ");
 				if (shouldDelete)
 				{
@@ -136,7 +136,7 @@ namespace ApplicationCleaner.Services
 						File.Delete(file);
 					}
 
-					WriteConsole("File or folder was deleted");
+					WriteConsoleLine("File or folder has been deleted");
 				}
 			}
 		}
@@ -162,7 +162,7 @@ namespace ApplicationCleaner.Services
 				return SearchFiles(keyword, libraryFolder, subFolder);
 			}
 
-			return await ShowLibraryConfigurationError($"The Library folder of the current user does not exist at {libraryFolder}. Please change the configuration and try again.", token);
+			return await ShowLibraryConfigurationError($"The Library folder of the current user does not exist at the path {libraryFolder}. Please change the configuration and try again.", token);
 		}
 
 		private async Task<IEnumerable<string>> SearchRootLibraryFiles(string subFolder, string keyword, CancellationToken token)
@@ -173,7 +173,7 @@ namespace ApplicationCleaner.Services
 				return SearchFiles(keyword, rootLibraryFolder, subFolder);
 			}
 
-			return await ShowLibraryConfigurationError($"The root Library folder does not exist at {rootLibraryFolder}. Please change the configuration and try again.", token);
+			return await ShowLibraryConfigurationError($"The root Library folder does not exist at the path {rootLibraryFolder}. Please change the configuration and try again.", token);
 		}
 
 		private async Task<IEnumerable<string>> ShowLibraryConfigurationError(string message, CancellationToken token)
@@ -198,15 +198,15 @@ namespace ApplicationCleaner.Services
 				key = Console.ReadKey(true).Key;
 				if (key == ConsoleKey.Backspace)
 				{
-					Console.Write("\b \b");
+					WriteConsole("\b \b");
 					return PromptUser();
 				}
 			}
-			
-			WriteConsole(string.Empty);
+
+			WriteConsoleLine(string.Empty);
 			return answer == ConsoleKey.Y;
 		}
-		
+
 		private static bool PromptUser(string text)
 		{
 			WriteConsoleQuestion(text);
@@ -215,23 +215,28 @@ namespace ApplicationCleaner.Services
 
 		private static void WriteConsole(string text)
 		{
+			Console.Write(text);
+		}
+
+		private static void WriteConsoleLine(string text)
+		{
 			Console.WriteLine(text);
 		}
 
 		private static void WriteConsoleSeparator()
 		{
-			WriteConsole("------");
+			WriteConsoleLine("------");
 		}
 
 		private static void WriteConsoleQuestion(string text)
 		{
-			Console.Write($"\u001b[1m{text}\u001b[0m");
+			WriteConsole($"\u001b[1m{text}\u001b[0m");
 		}
 
 		private static void WriteConsoleError(string message)
 		{
 			Console.ForegroundColor = ConsoleColor.Red;
-			WriteConsole(message);
+			WriteConsoleLine(message);
 			Console.ResetColor();
 		}
 	}
