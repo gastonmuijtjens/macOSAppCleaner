@@ -1,9 +1,9 @@
 # macOSAppCleaner
-Small command line tool for cleaning up old application files after deletion of an application on macOS. This tool will search for these files with a provided keyword.
+Small command line tool for cleaning up old application files that often remain after deletion of an application on macOS. It is possible to search for these files with a provided keyword, after which they can be optionally deleted.
 
 ## System requirements
 - macOS 10.14 or higher
-- [.NET Core SDK 2.2](https://dotnet.microsoft.com/download) or higher
+- [.NET Core SDK 3.0](https://dotnet.microsoft.com/download) or higher
 
 ## Installation
 In order to build and publish this application, run the following commands in the project folder in the given order:
@@ -12,7 +12,7 @@ In order to build and publish this application, run the following commands in th
 - `dotnet publish -r osx.10.14-x64 -c Release`
 
 ## Usage
-To run the application after installation, execute `./ApplicationCleaner [keyword]` in the `publish` directory (defaults to `bin/Release/netcoreapp2.2/osx.10.14-x64/publish/`). The keyword (case insensitive) will be used to search for matching files or folders within the configured `Library` folders and must have a length of at least 3 by default. It is required to precede the command with `sudo` in order to search and delete files or folders located in the root `Library` folder.
+To run the application after installation, execute `./ApplicationCleaner [keyword]` in the `publish` directory (defaults to `bin/Release/netcoreapp3.0/osx.10.14-x64/publish/`). The keyword (case insensitive) will be used to search for matching files or folders within the configured `Library` folders and must have a length of at least 3 by default. It is required to precede the command with `sudo` in order to search and delete files or folders located in the root `Library` folder.
 
 ## Example
 An example concerning deleting the `GitHub Desktop` application would be:
