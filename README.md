@@ -1,5 +1,5 @@
 # macOSAppCleaner
-One of the abilities that the macOS operation system currently lacks is a user-friendly way to delete applications from the system without leaving unnecessary files behind. A lot of files often remain after simply dragging an application to the trash can, leaving clutter and occupying unnecessary space. Manually searching for those files is a time-consuming and potentially risky process. This tool aims to solve this problem by providing an easy-to-use command line interface for searching and optionally removing these files.
+One of the abilities that the macOS operation system currently lacks is a user-friendly way to delete applications from the system without leaving unnecessary files behind. A lot of files often remain after simply dragging an application to the trash can, leaving clutter and occupying unnecessary space. Manually searching for those files is a time-consuming and potentially risky process. This command line tool aims to solve this problem by providing an easy-to-use command line interface for searching and optionally removing these files.
 
 ## System requirements
 - macOS 10.15 or higher
