@@ -14,7 +14,7 @@ To build and publish, run the following commands within the project folder respe
 ## Usage
 To run the application after installation, execute `./ApplicationCleaner [keyword]` in the `publish` directory (defaults to `bin/Release/netcoreapp3.1/osx.10.15-x64/publish/`). The keyword (case insensitive) will be used to search for matching files or folders within the configured `Library` folders and must have a minimum length of at least 3 by default. It is required to precede the command with `sudo` in order to search and delete files or folders located in the root `Library` folder.
 
-If any matching file or folder is found, the user will be prompted to delete it. Press `Y` to accept and `N` to cancel and the application will continue to execute.
+If any matching file or folder is found, the user will be prompted to delete it. Press `Y` to accept or `N` to cancel and proceed with the next match.
 
 ## Example
 As an example, run the following command to search for files associated with the `GitHub Desktop` application:
